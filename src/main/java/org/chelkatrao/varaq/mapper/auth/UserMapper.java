@@ -3,10 +3,9 @@ package org.chelkatrao.varaq.mapper.auth;
 import org.chelkatrao.varaq.dto.auth.RoleDto;
 import org.chelkatrao.varaq.dto.auth.UserCreateDto;
 import org.chelkatrao.varaq.dto.auth.UserDto;
+import org.chelkatrao.varaq.mapper.EmployeeMapper;
 import org.chelkatrao.varaq.model.auth.Role;
 import org.chelkatrao.varaq.model.auth.User;
-import org.chelkatrao.varaq.repository.DepartmentRepository;
-import org.chelkatrao.varaq.repository.EmployeeRepository;
 import org.chelkatrao.varaq.repository.auth.RoleRepository;
 import org.chelkatrao.varaq.service.UserSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,17 +22,16 @@ public class UserMapper {
     private PasswordEncoder passwordEncoder;
     private RoleRepository roleRepository;
     private UserSession userSession;
-    private DepartmentRepository departmentRepository;
-    private EmployeeRepository employeeRepository;
+    private EmployeeMapper employeeMapper;
 
     public UserMapper(PasswordEncoder passwordEncoder,
                       RoleRepository roleRepository,
-                      DepartmentRepository departmentRepository,
-                      UserSession userSession) {
+                      UserSession userSession,
+                      EmployeeMapper employeeMapper) {
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
-        this.departmentRepository = departmentRepository;
         this.userSession = userSession;
+        this.employeeMapper = employeeMapper;
     }
 
     public User toUser(UserCreateDto userCreateDto) throws Exception {
@@ -48,10 +46,10 @@ public class UserMapper {
         } else {
             user.setCreateBy("user");
         }
-
-        if (userCreateDto.getRoleIds() != null) {
+        user.setUsername(userCreateDto.getUsername());
+        if (userCreateDto.getRoles() != null) {
             Set<Role> roles = new HashSet<>();
-            for (Long roleId : userCreateDto.getRoleIds()) {
+            for (Long roleId : userCreateDto.getRoles()) {
                 Role role = roleRepository.findById(roleId).get();
                 roles.add(role);
             }
@@ -65,25 +63,34 @@ public class UserMapper {
     public UserCreateDto toCreateDto(User user) {
         UserCreateDto dto = new UserCreateDto();
         dto.setId(user.getId());
+        if (user.getEmployee() != null)
+            dto.setEmployeeId(user.getEmployee().getId());
+        if (user.getTeachers() != null)
+            dto.setTeachersId(user.getTeachers().getId());
+        if (user.getStudents() != null)
+            dto.setStudentsId(user.getStudents().getId());
+        dto.setStatus(user.getStatus());
+        dto.setUsername(user.getUsername());
         Set<Long> roleIds = new HashSet<>();
         for (Role role : user.getRoles()) {
             roleIds.add(role.getId());
         }
-        dto.setRoleIds(roleIds);
+        dto.setRoles(roleIds);
         return dto;
     }
 
     public List<UserCreateDto> toCreateDto(List<User> users) {
-        return users.stream().map(u ->
-                toCreateDto(u)
-        ).collect(Collectors.toList());
+        return users.stream().map(this::toCreateDto).collect(Collectors.toList());
     }
 
     public List<UserDto> listUserToListUserDto(List<User> list) {
-        List<UserDto> userListDto = list.stream()
+
+        return list.stream()
                 .map(user ->
                         UserDto.builder()
                                 .id(user.getId())
+                                .username(user.getUsername())
+                                .status(user.getStatus())
                                 .roles(user.getRoles().stream()
                                         .map(role -> RoleDto.builder()
                                                 .id(role.getId())
@@ -91,8 +98,10 @@ public class UserMapper {
                                                 .roleInfo(role.getRoleInfo())
                                                 .build()
                                         ).collect(Collectors.toSet())
-                                ).build())
+                                )
+                                .employee(employeeMapper.toEmployeeDto(user.getEmployee()))
+                                // TODO shu yerga student bilan teacherlarni qo'shib qo'yish kerak
+                                .build())
                 .collect(Collectors.toList());
-        return userListDto;
     }
 }

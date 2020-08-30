@@ -34,7 +34,6 @@ public class AuthorityService {
     }
 
 
-    //TODO: permissionlar bazada bor bo'lsa yozmaydigan qilish kerak
     public void createPermission() {
         Permission permission = permissionRepository.findByPermissionName(UserPermissionEnum.SUPER_ADMIN_READ.name());
         if (permission == null) {

@@ -3,6 +3,7 @@ package org.chelkatrao.varaq.controller.auth;
 import org.chelkatrao.varaq.dto.auth.RoleCreateDto;
 import org.chelkatrao.varaq.dto.auth.RoleDto;
 import org.chelkatrao.varaq.service.auth.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ public class RoleController {
 
     private RoleService roleService;
 
+    @Autowired
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }

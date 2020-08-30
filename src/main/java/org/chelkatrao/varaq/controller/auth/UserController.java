@@ -1,11 +1,9 @@
 package org.chelkatrao.varaq.controller.auth;
 
-import com.google.common.collect.Sets;
 import org.chelkatrao.varaq.dto.auth.UserCreateDto;
 import org.chelkatrao.varaq.dto.auth.UserDto;
-import org.chelkatrao.varaq.service.DepartmentServiceImpl;
-import org.chelkatrao.varaq.service.auth.RoleService;
 import org.chelkatrao.varaq.service.auth.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +14,10 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
-    private RoleService roleService;
-    private DepartmentServiceImpl departmentService;
 
-    public UserController(UserService userService, RoleService roleService, DepartmentServiceImpl departmentService) {
+    @Autowired
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
-        this.departmentService = departmentService;
     }
 
     @GetMapping("/list-full")
@@ -38,18 +33,8 @@ public class UserController {
     }
 
     @PostMapping("/new")
-    public String createUser(@RequestBody UserCreateDto userCreateDto) throws Exception {
-        // Hamma userlar bir xil password bilan tizimga kirishadi !!!
-        userCreateDto.setPassword("chelkatrao");
-        Boolean company = departmentService.findByDepartmentId(userCreateDto.getDepartmentId(), userCreateDto.getDepartmentCode());
-        Boolean isExist = departmentService.findByCode(userCreateDto.getDepartmentCode());
-        if (isExist && company) {
-            userCreateDto.setRoleIds(Sets.newHashSet(roleService.getRoleByName("USER_ROLE").getId()));
-            userService.createUser(userCreateDto);
-            return "success";
-        } else {
-            return "error";
-        }
+    public UserCreateDto createUser(@RequestBody UserCreateDto userCreateDto) throws Exception {
+        return userService.createUser(userCreateDto);
     }
 
     @GetMapping("/remove/{id}")

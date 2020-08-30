@@ -1,15 +1,17 @@
 package org.chelkatrao.varaq.service.auth;
 
-import org.chelkatrao.varaq.security.UserDetailDto;
 import org.chelkatrao.varaq.dto.auth.PermissionDto;
 import org.chelkatrao.varaq.dto.auth.RoleDto;
 import org.chelkatrao.varaq.dto.auth.UserCreateDto;
 import org.chelkatrao.varaq.dto.auth.UserDto;
+import org.chelkatrao.varaq.enums.Status;
+import org.chelkatrao.varaq.mapper.EmployeeMapper;
 import org.chelkatrao.varaq.mapper.auth.UserMapper;
 import org.chelkatrao.varaq.model.auth.Role;
 import org.chelkatrao.varaq.model.auth.User;
 import org.chelkatrao.varaq.repository.auth.UserRepository;
 import org.chelkatrao.varaq.security.AuthorityService;
+import org.chelkatrao.varaq.security.UserDetailDto;
 import org.chelkatrao.varaq.service.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -30,31 +32,31 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository userRepository;
-
     private AuthorityService authorityService;
-
     private UserMapper userMapper;
-
     private UserSession userSession;
-
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+    private EmployeeMapper employeeMapper;
 
     @Autowired
     public UserService(UserRepository userRepository,
                        AuthorityService authorityService,
                        UserMapper userMapper,
-                       UserSession userSession) {
+                       UserSession userSession,
+                       JdbcTemplate jdbcTemplate, EmployeeMapper employeeMapper) {
         this.userRepository = userRepository;
         this.authorityService = authorityService;
         this.userMapper = userMapper;
         this.userSession = userSession;
+        this.jdbcTemplate = jdbcTemplate;
+        this.employeeMapper = employeeMapper;
     }
 
     @CacheEvict
     @Transactional
     public UserCreateDto createUser(UserCreateDto userCreateDto) throws Exception {
         User user = userMapper.toUser(userCreateDto);
+        user.setCreateBy(userSession.getUser().getUsername());
         user = userRepository.save(user);
         return userMapper.toCreateDto(user);
     }
@@ -86,7 +88,10 @@ public class UserService {
         List<UserDto> userDtoList = users.stream()
                 .map(user -> UserDto.builder()
                         .id(user.getId())
-                        .phoneNumber(user.getUsername())
+                        .username(user.getUsername())
+                        .employee(employeeMapper.toEmployeeDto(user.getEmployee()))
+                        .status(Status.ACTIVE)
+                        // TODO Teacher bilan Student ni mapper qilib qo'shib qo'yish kerka employee qo'shilganday
                         .roles(user.getRoles().stream()
                                 .map(role -> RoleDto.builder()
                                         .id(role.getId())

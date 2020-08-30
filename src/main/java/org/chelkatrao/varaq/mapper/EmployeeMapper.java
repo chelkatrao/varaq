@@ -34,16 +34,18 @@ public class EmployeeMapper {
     }
 
     public EmployeeDto toEmployeeDto(Employee employee) {
-        EmployeeDto employeeDto = new EmployeeDto();
-        employeeDto.setStartWorkDate(employee.getStartWorkDate());
-        employeeDto.setPassportNumber(employee.getPassportNumber());
-        employeeDto.setTaxNumber(employee.getTaxNumber());
-        employeeDto.setEmployeeStatus(employee.getEmployeeStatus());
-        employeeDto.setDismissDate(employee.getDismissDate());
-        if (employee.getDepartment() != null)
-            employeeDto.setDepartmentId(employee.getDepartment().getId());
+        if (employee != null) {
+            EmployeeDto employeeDto = new EmployeeDto();
+            employeeDto.setStartWorkDate(employee.getStartWorkDate());
+            employeeDto.setPassportNumber(employee.getPassportNumber());
+            employeeDto.setTaxNumber(employee.getTaxNumber());
+            employeeDto.setEmployeeStatus(employee.getEmployeeStatus());
+            employeeDto.setDismissDate(employee.getDismissDate());
+            if (employee.getDepartment() != null)
+                employeeDto.setDepartmentId(employee.getDepartment().getId());
 
-        return (EmployeeDto) personMapper.toPersonDto(employeeDto, employee);
+            return (EmployeeDto) personMapper.toPersonDto(employeeDto, employee);
+        } else return null;
     }
 
     public List<EmployeeDto> toEmployeeDto(List<Employee> employees) {
