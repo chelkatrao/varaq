@@ -33,6 +33,9 @@ public class AuthorityService {
         this.departmentRepository = departmentRepository;
     }
 
+    /*
+    * Create permissions
+    * */
 
     public void createPermission() {
         Permission permission = permissionRepository.findByPermissionName(UserPermissionEnum.SUPER_ADMIN_READ.name());
@@ -51,6 +54,10 @@ public class AuthorityService {
         }
     }
 
+    /*
+    * Create department
+    * */
+
     @Transactional
     public void createDepartment() {
         Department isCompanyExist = departmentRepository.findByName("system");
@@ -63,26 +70,34 @@ public class AuthorityService {
         }
     }
 
+    /*
+    *  Create role admin
+    * */
+
     @Transactional
-    public void createRole() {
-        Role isRoleExist = roleRepository.findByRoleName("SUPER_ADMIN_ROLE");
+    public void createRoleAdmin() {
+        Role isRoleExist = roleRepository.findByRoleName("ROLE_ADMIN");
         if (isRoleExist == null) {
             Role role = new Role();
-            role.setRoleName("SUPER_ADMIN_ROLE");
-            role.setRoleInfo("super admin role");
+            role.setRoleName("ROLE_ADMIN");
+            role.setRoleInfo("role admin");
             role.setPermissions(Sets.newHashSet(permissionRepository.findAll()));
             role.setCreateBy("system");
             roleRepository.save(role);
         }
     }
 
+    /*
+    *  Crate role user
+    * */
+
     @Transactional
-    public void createUserRole() {
-        Role isRoleExist = roleRepository.findByRoleName("USER_ROLE");
+    public void createRoleUser() {
+        Role isRoleExist = roleRepository.findByRoleName("ROLE_USER");
         if (isRoleExist == null) {
             Role role = new Role();
-            role.setRoleName("USER_ROLE");
-            role.setRoleInfo("user role");
+            role.setRoleName("ROLE_USER");
+            role.setRoleInfo("role_user");
             List<Permission> userPermission = permissionRepository.findAll().stream().filter(permission -> permission.getPermissionName().startsWith("USER")).collect(Collectors.toList());
             role.setPermissions(Sets.newHashSet(userPermission));
             role.setCreateBy("user");
@@ -90,12 +105,34 @@ public class AuthorityService {
         }
     }
 
+    /*
+     *  Crate role teacher
+     * */
+
+    @Transactional
+    public void createRoleTeacher() {
+        Role isRoleExist = roleRepository.findByRoleName("ROLE_TEACHER");
+        if (isRoleExist == null) {
+            Role role = new Role();
+            role.setRoleName("ROLE_TEACHER");
+            role.setRoleInfo("role_teacher");
+            List<Permission> userPermission = permissionRepository.findAll().stream().filter(permission -> permission.getPermissionName().startsWith("TEACHER")).collect(Collectors.toList());
+            role.setPermissions(Sets.newHashSet(userPermission));
+            role.setCreateBy("user");
+            roleRepository.save(role);
+        }
+    }
+
+    /*
+    *  Crate user
+    * */
+
     @Transactional
     public void createUser() {
         User isUserExist = userRepository.findByUsername("chelkatrao");
         if (isUserExist == null) {
             User user = new User();
-            Role isRoleExist = roleRepository.findByRoleName("SUPER_ADMIN_ROLE");
+            Role isRoleExist = roleRepository.findByRoleName("ROLE_ADMIN");
             user.setPassword("$2y$10$OZ.d1M.cVXhKM7CsDQMa0up0uRZOy8ENlsPuaKNb7Gn97nI3C9uCm");
             user.setUsername("chelkatrao");
             user.setRoles(Sets.newHashSet(isRoleExist));
@@ -103,6 +140,10 @@ public class AuthorityService {
             userRepository.save(user);
         }
     }
+
+    /*
+    *  Get permissions
+    * */
 
     public Set<SimpleGrantedAuthority> getGrantedAuthority(Role role) {
         Set<SimpleGrantedAuthority> permission = role.getPermissions()

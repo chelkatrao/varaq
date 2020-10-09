@@ -12,8 +12,9 @@ public class VaraqApplication {
 		ConfigurableApplicationContext run = SpringApplication.run(VaraqApplication.class, args);
 		run.getBean(AuthorityService.class).createDepartment();// create department
 		run.getBean(AuthorityService.class).createPermission();// create permission
-		run.getBean(AuthorityService.class).createRole();// create admin role
-		run.getBean(AuthorityService.class).createUserRole();// create user role
+		run.getBean(AuthorityService.class).createRoleAdmin();// create admin role
+		run.getBean(AuthorityService.class).createRoleUser();// create user role
+		run.getBean(AuthorityService.class).createRoleTeacher();// create teacher role
 		run.getBean(AuthorityService.class).createUser();// create user
 	}
 

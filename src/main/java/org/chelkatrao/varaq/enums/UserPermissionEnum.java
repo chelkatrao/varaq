@@ -1,7 +1,5 @@
 package org.chelkatrao.varaq.enums;
 
-import org.chelkatrao.varaq.model.Employee;
-
 public enum UserPermissionEnum {
 
     SUPER_ADMIN_READ("super_admin:read"),
