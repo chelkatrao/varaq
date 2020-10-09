@@ -90,10 +90,7 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
         Map<String, Object> responseData = new TreeMap<>();
 
         responseData.put("token", "Bearer " + toke);
-        responseData.put("permissions",
-                authResult.getAuthorities() // TODO permissionlistida keylar role bo'lib qolgan shuni to'g'rilash
-        );
-        responseData.put("role", userService.getUserIfExist(authResult.getName()).getRoles());
+        responseData.put("permissions", authResult.getAuthorities());
         responseData.put("username", authResult.getName());
 
         response.setContentType("application/json;charset=UTF-8");

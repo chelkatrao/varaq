@@ -4,15 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.chelkatrao.varaq.enums.Status;
+import org.chelkatrao.varaq.model.Employee;
 import org.chelkatrao.varaq.model.Students;
 import org.chelkatrao.varaq.model.Teachers;
 import org.chelkatrao.varaq.model.base.BaseEntity;
-import org.chelkatrao.varaq.model.Department;
-import org.chelkatrao.varaq.model.Employee;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -36,7 +36,7 @@ public class User extends BaseEntity {
     @Column(name = "status")
     private Status status = Status.INACTIVE;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "u_users_roles",
             joinColumns = @JoinColumn(
@@ -46,7 +46,7 @@ public class User extends BaseEntity {
                     name = "role_id", referencedColumnName = "id"
             )
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "employee_id")

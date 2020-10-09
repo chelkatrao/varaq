@@ -85,7 +85,8 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             return null;
-        } return user;
+        }
+        return user;
     }
 
     @Cacheable(key = "#root.methodName")
