@@ -91,7 +91,7 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
 
         responseData.put("token", "Bearer " + toke);
         responseData.put("permissions",
-                authResult.getAuthorities() // TODO permissionlistida keylar role bo'lib qolgan shuni to'g'rilash kerak
+                authResult.getAuthorities() // TODO permissionlistida keylar role bo'lib qolgan shuni to'g'rilash
         );
         responseData.put("role", userService.getUserIfExist(authResult.getName()).getRoles());
         responseData.put("username", authResult.getName());
