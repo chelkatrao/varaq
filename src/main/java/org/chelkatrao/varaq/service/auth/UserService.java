@@ -74,18 +74,24 @@ public class UserService {
             authentications.addAll(authorityService.getGrantedAuthority(role));
         }
 
-        UserDetailDto userDetailDto = new UserDetailDto(
+        return new UserDetailDto(
                 user.getUsername(),
                 user.getPassword(),
                 authentications
         );
-        return userDetailDto;
+    }
+
+    public User getUserIfExist(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            return null;
+        } return user;
     }
 
     @Cacheable(key = "#root.methodName")
     public List<UserDto> getUserListFull() {
         List<User> users = userRepository.findAll();
-        List<UserDto> userDtoList = users.stream()
+        return users.stream()
                 .map(user -> UserDto.builder()
                         .id(user.getId())
                         .username(user.getUsername())
@@ -106,7 +112,6 @@ public class UserService {
                                                                         .build()).collect(Collectors.toSet())
                                         ).build()).collect(Collectors.toSet())
                         ).build()).collect(Collectors.toList());
-        return userDtoList;
     }
 
     @Cacheable(key = "#root.methodName")

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.chelkatrao.varaq.security.UserDetailDto;
 import org.chelkatrao.varaq.service.auth.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,13 +50,12 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                     authenticationRequest.getPassword() //  credential = password
             );
 
-            UserDetailDto dto = userService.getUserByUsername(authenticationRequest.getUsername());
             Authentication authenticate = null;
-            if (dto != null) {
+            if (userService.getUserIfExist(authenticationRequest.getUsername()) != null) {
                 authenticate = authenticationManager.authenticate(authentication);
             } else {
                 Gson gson = new Gson();
-                Map map = new HashMap();
+                Map<String, Object> map = new HashMap<>();
                 map.put("timestamp", LocalDateTime.now());
                 map.put("message", "this user is not exist");
                 gson.toJson(map);
@@ -89,14 +87,17 @@ public class JWTUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .signWith(secretKey)
                 .compact();
 
-        Map responseDate = new TreeMap();
+        Map<String, Object> responseData = new TreeMap<>();
 
-        responseDate.put("token", "Bearer " + toke);
-        responseDate.put("permissions", authResult.getAuthorities());
-        responseDate.put("username", authResult.getName());
+        responseData.put("token", "Bearer " + toke);
+        responseData.put("permissions",
+                authResult.getAuthorities() // TODO permissionlistida keylar role bo'lib qolgan shuni to'g'rilash kerak
+        );
+        responseData.put("role", userService.getUserIfExist(authResult.getName()).getRoles());
+        responseData.put("username", authResult.getName());
 
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(gson.toJson(responseDate));
+        response.getWriter().write(gson.toJson(responseData));
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
