@@ -150,7 +150,7 @@ public class AuthorityService {
                 .stream()
                 .map(permissions -> new SimpleGrantedAuthority(permissions.getPermissionName()))
                 .collect(Collectors.toSet());
-        permission.add(new SimpleGrantedAuthority(role.getRoleName() + "_ADMIN"));
+        permission.add(new SimpleGrantedAuthority(role.getRoleName()));
         return permission;
     }
 }
