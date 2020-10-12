@@ -6,6 +6,7 @@ import org.chelkatrao.varaq.dto.auth.UserDto;
 import org.chelkatrao.varaq.mapper.EmployeeMapper;
 import org.chelkatrao.varaq.model.auth.Role;
 import org.chelkatrao.varaq.model.auth.User;
+import org.chelkatrao.varaq.repository.DepartmentRepository;
 import org.chelkatrao.varaq.repository.auth.RoleRepository;
 import org.chelkatrao.varaq.service.UserSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,15 +24,18 @@ public class UserMapper {
     private RoleRepository roleRepository;
     private UserSession userSession;
     private EmployeeMapper employeeMapper;
+    private DepartmentRepository departmentRepository;
 
     public UserMapper(PasswordEncoder passwordEncoder,
                       RoleRepository roleRepository,
                       UserSession userSession,
-                      EmployeeMapper employeeMapper) {
+                      EmployeeMapper employeeMapper,
+                      DepartmentRepository departmentRepository) {
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.userSession = userSession;
         this.employeeMapper = employeeMapper;
+        this.departmentRepository = departmentRepository;
     }
 
     public User toUser(UserCreateDto userCreateDto) throws Exception {
@@ -47,6 +51,12 @@ public class UserMapper {
             user.setCreateBy("user");
         }
         user.setUsername(userCreateDto.getUsername());
+        if (userCreateDto.getDepartmentId() != null) {
+            user.setDepartment(departmentRepository.findById(userCreateDto.getDepartmentId()).get());
+        }
+
+        user.setEmployee(employeeMapper.toEmployee(userCreateDto.getEmployeeDto()));
+
         if (userCreateDto.getRoles() != null) {
             Set<Role> roles = new HashSet<>();
             for (Long roleId : userCreateDto.getRoles()) {
@@ -64,11 +74,13 @@ public class UserMapper {
         UserCreateDto dto = new UserCreateDto();
         dto.setId(user.getId());
         if (user.getEmployee() != null)
-            dto.setEmployeeId(user.getEmployee().getId());
-        if (user.getTeachers() != null)
-            dto.setTeachersId(user.getTeachers().getId());
-        if (user.getStudents() != null)
-            dto.setStudentsId(user.getStudents().getId());
+            dto.setEmployeeDto(employeeMapper.toEmployeeDto(user.getEmployee()));
+//        if (user.getTeachers() != null)
+//            dto.setTeachersId(user.getTeachers().getId());
+//        if (user.getStudents() != null)
+//            dto.setStudentsId(user.getStudents().getId());
+        if (user.getDepartment() != null)
+            dto.setDepartmentId(user.getDepartment().getId());
         dto.setStatus(user.getStatus());
         dto.setUsername(user.getUsername());
         Set<Long> roleIds = new HashSet<>();

@@ -31,8 +31,4 @@ public class Employee extends Person {
     @Column(name = "hr_dismiss_date")
     private Date dismissDate;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
-
 }

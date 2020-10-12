@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.chelkatrao.varaq.enums.Status;
+import org.chelkatrao.varaq.model.Department;
 import org.chelkatrao.varaq.model.Employee;
 import org.chelkatrao.varaq.model.Students;
 import org.chelkatrao.varaq.model.Teachers;
@@ -52,12 +53,16 @@ public class User extends BaseEntity {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "student_id")
-    private Students students;
+//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+//    @JoinColumn(name = "student_id")
+//    private Students students;
+//
+//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+//    @JoinColumn(name = "teacher_id")
+//    private Teachers teachers;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "teacher_id")
-    private Teachers teachers;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
 }
