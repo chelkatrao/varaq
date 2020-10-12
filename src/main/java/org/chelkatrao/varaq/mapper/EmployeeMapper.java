@@ -28,7 +28,7 @@ public class EmployeeMapper {
         employee.setTaxNumber(employeeDto.getTaxNumber());
         employee.setEmployeeStatus(employeeDto.getEmployeeStatus());
         employee.setDismissDate(employeeDto.getDismissDate());
-        employee.setDepartment(departmentRepository.findById(employeeDto.getDepartmentId()).get());
+//        employee.setDepartment(departmentRepository.findById(employeeDto.getDepartmentId()).get());
 
         return (Employee) personMapper.toPerson(employeeDto, employee);
     }
@@ -41,8 +41,8 @@ public class EmployeeMapper {
             employeeDto.setTaxNumber(employee.getTaxNumber());
             employeeDto.setEmployeeStatus(employee.getEmployeeStatus());
             employeeDto.setDismissDate(employee.getDismissDate());
-            if (employee.getDepartment() != null)
-                employeeDto.setDepartmentId(employee.getDepartment().getId());
+//            if (employee.getDepartment() != null)
+//                employeeDto.setDepartmentId(employee.getDepartment().getId());
 
             return (EmployeeDto) personMapper.toPersonDto(employeeDto, employee);
         } else return null;

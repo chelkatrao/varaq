@@ -46,8 +46,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public ResponseEntity<?> edit(EmployeeDto employeeDto) {
         Employee employee = employeeRepository.findById(employeeDto.getId()).get();
-        if (employeeDto.getDepartmentId() != null && departmentRepository.findById(employeeDto.getDepartmentId()).isPresent())
-            employee.setDepartment(departmentRepository.findById(employeeDto.getDepartmentId()).get());
+//        if (employeeDto.getDepartmentId() != null && departmentRepository.findById(employeeDto.getDepartmentId()).isPresent())
+//            employee.setDepartment(departmentRepository.findById(employeeDto.getDepartmentId()).get());
         employee.setDismissDate(employeeDto.getDismissDate());
         employee.setStartWorkDate(employeeDto.getDismissDate());
         employee.setPassportNumber(employeeDto.getPassportNumber());
