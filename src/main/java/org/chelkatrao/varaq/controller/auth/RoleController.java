@@ -50,7 +50,6 @@ public class RoleController {
         return roleService.getRoleByRoleId(roleId);
     }
 
-
     @PutMapping("/edit/{id}")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_WRITE')")
     public RoleCreateDto updateRole(@RequestBody RoleCreateDto roleCreateDto,
