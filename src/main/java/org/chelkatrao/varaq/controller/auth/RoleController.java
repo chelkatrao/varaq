@@ -44,6 +44,13 @@ public class RoleController {
         return roleService.getRoleByUserId(userId);
     }
 
+    @GetMapping("/{roleId}")
+    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_WRITE')")
+    public RoleCreateDto getRoleByRoleId(@PathVariable("roleId") Long roleId) {
+        return roleService.getRoleByRoleId(roleId);
+    }
+
+
     @PutMapping("/edit/{id}")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_WRITE')")
     public RoleCreateDto updateRole(@RequestBody RoleCreateDto roleCreateDto,

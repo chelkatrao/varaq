@@ -88,4 +88,7 @@ public class RoleService {
         return roleMapper.toCreateDto(roleRepository.findByRoleName(roleName));
     }
 
+    public RoleCreateDto getRoleByRoleId(Long roleId) {
+        return roleMapper.toCreateDto(roleRepository.findById(roleId).get());
+    }
 }
