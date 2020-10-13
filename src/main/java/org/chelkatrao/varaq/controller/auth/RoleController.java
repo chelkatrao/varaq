@@ -53,7 +53,7 @@ public class RoleController {
     @PutMapping("/edit/{id}")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_WRITE')")
     public RoleCreateDto updateRole(@RequestBody RoleCreateDto roleCreateDto,
-                                    @PathVariable("id") Long id) throws Throwable {
+                                    @PathVariable("id") Long id) {
         return roleService.updateRole(roleCreateDto, id);
     }
 

@@ -5,7 +5,6 @@ import org.chelkatrao.varaq.dto.auth.RoleCreateDto;
 import org.chelkatrao.varaq.dto.auth.RoleDto;
 import org.chelkatrao.varaq.model.auth.Permission;
 import org.chelkatrao.varaq.model.auth.Role;
-import org.chelkatrao.varaq.repository.auth.PermissionRepository;
 import org.chelkatrao.varaq.service.UserSession;
 import org.springframework.stereotype.Component;
 

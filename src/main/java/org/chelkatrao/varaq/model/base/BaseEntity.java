@@ -22,9 +22,8 @@ public class BaseEntity {
     private Long id;
 
     @CreatedBy
-    @Column(name = "create_by", nullable = false, length = 50, updatable = false)
-    @JsonIgnore
-    private String createBy;
+    @Column(name = "create_by", nullable = false, updatable = false)
+    private String createBy = "system";
 
     @CreatedBy
     @Column(name = "create_date", updatable = false)

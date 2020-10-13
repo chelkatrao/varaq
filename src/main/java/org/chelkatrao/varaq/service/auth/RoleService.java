@@ -2,11 +2,12 @@ package org.chelkatrao.varaq.service.auth;
 
 import org.chelkatrao.varaq.dto.auth.RoleCreateDto;
 import org.chelkatrao.varaq.dto.auth.RoleDto;
+import org.chelkatrao.varaq.mapper.auth.PermissionMapper;
 import org.chelkatrao.varaq.mapper.auth.RoleMapper;
 import org.chelkatrao.varaq.model.auth.Role;
 import org.chelkatrao.varaq.repository.auth.RoleRepository;
 import org.chelkatrao.varaq.repository.auth.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.chelkatrao.varaq.service.UserSession;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @CacheConfig(cacheNames = {"roleServiceCache"})
@@ -27,14 +30,24 @@ public class RoleService {
 
     private RoleMapper roleMapper;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private PermissionMapper permissionMapper;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    private final UserSession userSession;
 
     public RoleService(RoleRepository roleRepository,
-                       UserRepository userRepository, RoleMapper roleMapper) {
+                       UserRepository userRepository,
+                       RoleMapper roleMapper,
+                       PermissionMapper permissionMapper,
+                       JdbcTemplate jdbcTemplate,
+                       UserSession userSession) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.roleMapper = roleMapper;
+        this.permissionMapper = permissionMapper;
+        this.jdbcTemplate = jdbcTemplate;
+        this.userSession = userSession;
     }
 
     @CacheEvict
@@ -72,14 +85,20 @@ public class RoleService {
     }
 
     @Cacheable(key = "#root.methodName")
-    public RoleCreateDto updateRole(RoleCreateDto roleCreateDto, Long id) throws Exception {
-        try {
-            Role role = roleMapper.toRole(roleCreateDto, roleRepository.findById(id).get());
-            role.setId(id);
-            Role editedRole = roleRepository.save(role);
-            return roleMapper.toCreateDto(editedRole);
-        } catch (Exception e) {
-            throw new Exception("User not updated something want wrong!!!");
+    public RoleCreateDto updateRole(RoleCreateDto roleCreateDto, Long id) {
+        Optional<Role> optionalRole = roleRepository.findById(id);
+        if (optionalRole.isPresent()) {
+            Role role = optionalRole.get();
+            role.setRoleName(roleCreateDto.getRoleName());
+            role.setRoleInfo(roleCreateDto.getRoleInfo());
+            role.setPermissions(roleCreateDto.getPermissionDtoList()
+                    .stream()
+                    .map(permissionDto -> permissionMapper.toPermission(permissionDto))
+                    .collect(Collectors.toSet()));
+            role.setCreateBy(userSession.getUser().getUsername());
+            return roleMapper.toCreateDto(roleRepository.save(role));
+        } else {
+            throw new IllegalArgumentException("error while updating");
         }
     }
 
