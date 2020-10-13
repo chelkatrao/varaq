@@ -29,10 +29,10 @@ public class PermissionController {
         return permissionService.getAllPerms();
     }
 
-    @GetMapping("/get/{permissionId}")
+    @GetMapping("/get/{roleId}")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_WRITE','SUPER_ADMIN_READ')")
-    public Set<PermissionDto> getPermissionByRoleId(@PathVariable("permissionId") Long userId) {
-        return permissionService.getPermissionByRoleId(userId);
+    public Set<PermissionDto> getPermissionByRoleId(@PathVariable("roleId") Long roleId) {
+        return permissionService.getPermissionByRoleId(roleId);
     }
 
 }
