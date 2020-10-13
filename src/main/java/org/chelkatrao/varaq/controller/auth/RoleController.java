@@ -34,7 +34,7 @@ public class RoleController {
 
     @GetMapping("/remove/{id}")
     @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_WRITE')")
-    public Boolean removeRole(@PathVariable("id") Long id) throws Exception {
+    public Boolean removeRole(@PathVariable("id") Long id) {
         return roleService.removeRoleById(id);
     }
 

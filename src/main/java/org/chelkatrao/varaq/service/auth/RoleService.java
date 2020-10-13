@@ -1,5 +1,6 @@
 package org.chelkatrao.varaq.service.auth;
 
+import lombok.SneakyThrows;
 import org.chelkatrao.varaq.dto.auth.RoleCreateDto;
 import org.chelkatrao.varaq.dto.auth.RoleDto;
 import org.chelkatrao.varaq.mapper.auth.PermissionMapper;
@@ -68,13 +69,14 @@ public class RoleService {
     }
 
     @CacheEvict
-    public Boolean removeRoleById(Long id) throws Exception {
+    @SneakyThrows
+    public Boolean removeRoleById(Long id) {
         try {
-            jdbcTemplate.update(" delete from role_permission r where r.role_id =? ", id);
-            jdbcTemplate.update(" delete from roles r where r.id = ? ", id);
+            jdbcTemplate.update(" delete from u_roles_permissions r where r.role_id =? ", id);
+            jdbcTemplate.update(" delete from role r where r.id = ? ", id);
             return true;
         } catch (Exception e) {
-            throw new Exception("User not deleted!!!");
+            throw new IllegalStateException("User not deleted!!!");
         }
     }
 
