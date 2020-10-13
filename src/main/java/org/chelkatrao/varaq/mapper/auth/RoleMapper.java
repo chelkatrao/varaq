@@ -51,9 +51,10 @@ public class RoleMapper {
         dto.setRoleInfo(role.getRoleInfo());
         dto.setRoleName(role.getRoleName());
         List<PermissionDto> permissionDtoList = new ArrayList<>();
-        for (Permission permission : role.getPermissions()) {
-            permissionDtoList.add(permissionMapper.toDto(permission));
-        }
+        if (role.getPermissions() != null)
+            for (Permission permission : role.getPermissions()) {
+                permissionDtoList.add(permissionMapper.toDto(permission));
+            }
         dto.setPermissionDtoList(permissionDtoList);
         return dto;
     }
