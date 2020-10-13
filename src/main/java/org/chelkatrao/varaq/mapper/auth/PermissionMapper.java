@@ -10,14 +10,24 @@ import java.util.stream.Collectors;
 
 @Component
 public class PermissionMapper {
-    public Set<PermissionDto> listPermissionToListPermissionDto(Collection<Permission> list) {
-        Set<PermissionDto> listPermissionDto = list.stream()
-                .map(p -> PermissionDto.builder()
-                        .id(p.getId())
-                        .permissionInfo(p.getPermissionInfo())
-                        .permissionName(p.getPermissionName())
-                        .build()
-                ).collect(Collectors.toSet());
-        return listPermissionDto;
+
+    public PermissionDto toDto(Permission permission) {
+        PermissionDto permissionDto = new PermissionDto();
+        permissionDto.setId(permission.getId());
+        permissionDto.setPermissionInfo(permission.getPermissionInfo());
+        permissionDto.setPermissionName(permission.getPermissionName());
+        return permissionDto;
     }
+
+    public Permission toPermission(PermissionDto permissionDto) {
+        Permission permission = new Permission();
+        permission.setPermissionInfo(permissionDto.getPermissionInfo());
+        permission.setPermissionName(permissionDto.getPermissionName());
+        return permission;
+    }
+
+    public Set<PermissionDto> listPermissionToListPermissionDto(Collection<Permission> list) {
+        return list.stream().map(this::toDto).collect(Collectors.toSet());
+    }
+
 }

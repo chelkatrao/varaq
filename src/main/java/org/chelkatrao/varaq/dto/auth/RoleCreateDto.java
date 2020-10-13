@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,16 +16,16 @@ public class RoleCreateDto {
     private Long id;
     private String roleInfo;
     private String roleName;
-    private Set<Long> permissionIds;
+    private List<PermissionDto> permissionDtoList;
 
     public RoleCreateDto(Long id,
                          String roleInfo,
                          String roleName,
-                         Set<Long> permissionIds) {
+                         List<PermissionDto> permissionDtoList) {
         this.id = id;
         this.roleInfo = roleInfo;
         this.roleName = roleName;
-        this.permissionIds = permissionIds;
+        this.permissionDtoList = permissionDtoList;
     }
 
 }
