@@ -2,9 +2,8 @@ package org.chelkatrao.varaq.model.base;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.chelkatrao.varaq.enums.Gender;
 import org.chelkatrao.varaq.enums.MarriedStatusEnum;
-import org.chelkatrao.varaq.model.Employee;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -39,7 +38,7 @@ public class Person extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
-    private Employee.Gender gender;
+    private Gender gender;
 
     @Column(name = "mobile", length = 16)
     @Size(max = 16, message = "Mobile size must be between 0 and 16")
@@ -64,9 +63,5 @@ public class Person extends BaseEntity {
 
     @Column(name = "citizen_id")
     private String citizen;
-
-    public enum Gender {
-        MALE, FEMALE
-    }
 
 }

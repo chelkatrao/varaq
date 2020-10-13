@@ -15,12 +15,9 @@ import java.util.Set;
 @Table(name = "role")
 public class Role extends BaseEntity {
 
-    public static final String ADMIN_ROLE = "administrator";
-
     @Column(name = "role_name", length = 64)
     private String roleName;
 
-    @NaturalId
     @Column(name = "role_info", length = 64, unique = true)
     private String roleInfo;
 

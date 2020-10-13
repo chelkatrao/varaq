@@ -3,6 +3,7 @@ package org.chelkatrao.varaq.dto.base;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.chelkatrao.varaq.enums.Gender;
 import org.chelkatrao.varaq.enums.MarriedStatusEnum;
 import org.chelkatrao.varaq.model.base.Person;
 
@@ -19,7 +20,7 @@ public class PersonDto {
     String middleName;
     Date dateOfBirth;
     String region;
-    Person.Gender gender;
+    Gender gender;
     String mobile;
     String email;
     String address;
@@ -27,7 +28,7 @@ public class PersonDto {
     MarriedStatusEnum marriageStatus;
     String citizen;
 
-    public PersonDto(Long id, String firstName, String lastName, String middleName, Date dateOfBirth, String region, Person.Gender gender, String mobile, String email, String address, String address2, MarriedStatusEnum marriageStatus, String citizen) {
+    public PersonDto(Long id, String firstName, String lastName, String middleName, Date dateOfBirth, String region, Gender gender, String mobile, String email, String address, String address2, MarriedStatusEnum marriageStatus, String citizen) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
