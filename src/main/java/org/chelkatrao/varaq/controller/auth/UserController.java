@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_READ')")
+//    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_READ')")
     public List<UserDto> getUserList() {
         return userService.getUserList();
     }
