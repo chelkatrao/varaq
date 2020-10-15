@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("department")
-@PreAuthorize("hasAnyAuthority('SUPER_ADMIN_READ','SUPER_ADMIN_WRITE')")
+//@PreAuthorize("hasAnyAuthority('SUPER_ADMIN_READ','SUPER_ADMIN_WRITE')")
 public class DepartmentController {
 
     private DepartmentService departmentService;

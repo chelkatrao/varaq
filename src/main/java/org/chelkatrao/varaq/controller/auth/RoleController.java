@@ -21,7 +21,7 @@ public class RoleController {
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_READ','SUPER_ADMIN_WRITE')")
+//    @PreAuthorize("hasAnyAuthority('SUPER_ADMIN_READ','SUPER_ADMIN_WRITE')")
     public Set<RoleDto> getListRoles() {
         return roleService.getListRoles();
     }
